@@ -9,12 +9,12 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     OPENAI_MODEL: str = "gpt-4o"
     OPENAI_MAX_TOKENS: int = 4096
-    OPENAI_TIMEOUT: int = 60  # Increased for multi-step reasoning
+    OPENAI_TIMEOUT: int = 30
     
     # MCP Server Configuration
     MCP_SERVER_URL: str = "http://host.docker.internal:3000"
     MCP_CONNECTION_TIMEOUT: int = 10
-    MCP_REQUEST_TIMEOUT: int = 60  # Increased for complex tool calls
+    MCP_REQUEST_TIMEOUT: int = 30
     MCP_MAX_RETRIES: int = 3
     
     # Backend Configuration
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     SESSION_CLEANUP_INTERVAL: int = 15
     
     # LLM Orchestration
-    MAX_TOOL_ITERATIONS: int = 8  # Increased for complex multi-step queries
+    MAX_TOOL_ITERATIONS: int = 5
     ENABLE_STREAMING: bool = False
     
     # Guardrails

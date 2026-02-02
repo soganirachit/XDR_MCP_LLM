@@ -19,13 +19,10 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
     start_time = time.time()
     
     try:
-        # Step 1: Get session context first (needed for context-aware guardrails)
-        context = session_manager.get_context(request.session_id)
-
-        # Step 2: Validate query with guardrails (pass context for follow-up awareness)
+        # Step 1: Validate query with guardrails
         guardrails = GuardrailsChecker()
-        is_valid, rejection_message = guardrails.check(request.message, context)
-
+        is_valid, rejection_message = guardrails.check(request.message)
+        
         if not is_valid:
             logger.info(f"Query blocked by guardrails: {request.message[:50]}...")
             return ChatResponse(
@@ -39,7 +36,10 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
                 tool_calls_made=0
             )
         
-        # Step 3: Process with LLM orchestrator (context already fetched above)
+        # Step 2: Get session context
+        context = session_manager.get_context(request.session_id)
+        
+        # Step 3: Process with LLM orchestrator
         orchestrator = LLMOrchestrator()
         result = await orchestrator.process(
             message=request.message,
